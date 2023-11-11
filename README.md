@@ -15,7 +15,7 @@ from distrend import distrend
 ```
 ## Module function overview
 ### 1.checkStdIndicators(X)
-Check whether the features of X are included in distrend's standard indicators. You can view the current standard indicator index in the following ways:
+`checkStdIndicators(X)` Check whether the features of X are included in distrend's standard indicators. You can view the current standard indicator index in the following ways:
 ```python
 indicators = sel.stdIndicators
 print(indicators.keys())
