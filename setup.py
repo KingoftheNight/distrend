@@ -7,10 +7,11 @@ setup(name='distrend',
     author='Liang YC',
     author_email='1694822092@qq.com',
     license='BSD 2-Clause',
+    packages=['distrend'],
     install_requires=['numpy', 'pandas', 'tqdm', 'matplotlib'],
     entry_points={
         'console_scripts': [
-        'distrend=distrend:distrend',
+        'distrend=distrend.main:distrend',
             ]
         },
     python_requires=">=3.6",
