@@ -14,7 +14,7 @@ $conda install git+https://gitee.com/KingoftheNight/distrend.git
 from distrend import distrend
 ```
 ## Module function overview
-### 1.checkStdIndicators(X)
+### 1.checkStdIndicators
 `checkStdIndicators(X)` Check whether the features of X are included in distrend's standard indicators. You can view the current standard indicator index in the following ways:
 ```python
 indicators = sel.stdIndicators
