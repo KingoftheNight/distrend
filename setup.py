@@ -1,7 +1,8 @@
 from setuptools import setup
+from distrend.__init__ import version
 
 setup(name='distrend',
-    version='1.0',
+    version=version,
     description='Disease trend analysis platform accurately predicts the occurrence of diseases under mixed background',
     url='https://github.com/KingoftheNight/distrend',
     author='Liang YC',
