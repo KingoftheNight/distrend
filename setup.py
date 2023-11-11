@@ -12,7 +12,7 @@ setup(name='distrend',
     install_requires=['numpy', 'pandas', 'tqdm', 'matplotlib'],
     entry_points={
         'console_scripts': [
-        'distrend=distrend.main:distrend',
+        'distrend=distrend.__main__:distrend',
             ]
         },
     python_requires=">=3.6",
