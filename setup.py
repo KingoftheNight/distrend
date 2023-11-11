@@ -3,7 +3,7 @@ from __init__ import version
 
 setup(name='distrend',
     version=version,
-    description='Disease trend analysis platform accurately predicts the occurrence of diseases under mixed background',
+    description='Disease trend analysis module',
     url='https://github.com/KingoftheNight/distrend',
     author='Liang YC',
     author_email='1694822092@qq.com',
