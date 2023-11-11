@@ -1,5 +1,5 @@
 from setuptools import setup
-from distrend.__init__ import version
+from __init__ import version
 
 setup(name='distrend',
     version=version,
@@ -12,7 +12,7 @@ setup(name='distrend',
     install_requires=['numpy', 'pandas', 'tqdm', 'matplotlib'],
     entry_points={
         'console_scripts': [
-        'distrend=distrend.__main__:distrend',
+        'distrend=distrend:distrend',
             ]
         },
     python_requires=">=3.6",
