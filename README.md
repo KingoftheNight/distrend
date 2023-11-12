@@ -14,22 +14,25 @@ $conda install git+https://gitee.com/KingoftheNight/distrend.git
 from distrend import distrend
 ```
 ## Module function overview
-### 1.checkStdIndicators
-`checkStdIndicators(X)` Check whether the features of X are included in distrend's standard indicators. You can view the current standard indicator index in the following ways:
+Before starting the analysis, you need to prepare the data X and label y, which should be in DataFrame format. The following is the test data contained in distrend:
+```python
+sel = distrend()
+X, y = sel.testData()
+```
+### 1. Check Feature
+Check whether the indicators (features) of X are included in distrend's standard indicator range.
+```python
+sel.checkStdIndicators(X)
+# Parameters:
+# - X (DataFrame): input dataset.
+```
+You can view the current distrend standard indicators as follows:
 ```python
 indicators = sel.stdIndicators
-print(indicators.keys())
+print(list(indicators.keys()))
 ```
-If it does not contain your feature name (for example, tumor_diameter), you can add the entry in the following ways:
+If some indicators are not within the distrend range, you can update stdIndicators as follows:
 ```python
-indicators['tumor_diameter'] = {'Type': 'Tumor Morphology', 'From': 1, 'To': 5, 'Unit': 'cm'}
+indicators['your_indicator'] = {'Type': 'Self indicators', 'From': 5.0, 'To': 38.0, 'Unit': 'g/L'}
 sel.stdIndicators.update(indicators)
-```
-You can use joblib or other tools to save custom stdIndicators variables for future use:
-```python
-from joblib import dump, load
-# save
-dump(sel.stdIndicators, 'your_stdIndicators.dic')
-# load
-sel.stdIndicators = load('your_stdIndicators.dic')
 ```
