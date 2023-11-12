@@ -56,7 +56,7 @@ matrix = sel.matrix  # trend matrix
 ```
 A trend matrix converts X into a trend vector (each cell is a string instead of a number), which can be mapped to a numerical matrix in the following way:
 ```python
-X_new = sel.transform(X)
+X_new = sel.transform()
 ```
 If you just want to get X_new, you can also use the following methods:
 ```python
