@@ -19,6 +19,9 @@ Before starting the analysis, you need to prepare the data X and label y, which 
 sel = distrend()
 X, y = sel.testData()
 ```
+![mark](http://img.frankgene.top/blog/20231112/CWXtJ2qQaY74.png)
+
+![mark](http://img.frankgene.top/blog/20231112/HOtCgQ6a2Rnq.png)
 ### 1. Check Feature
 Check whether the indicators (features) of X are included in distrend's standard indicator range.
 ```python
