@@ -46,6 +46,8 @@ sel.fit(X, y)
 ```
 The sel is trained to contain the following attributes:
 ```python
+trend = sel.trend  # indicator trends
+information = sel.information  # indicator informations
 scores = sel.scores  # indicator weight
 matrix = sel.matrix  # trend matrix
 ```
@@ -66,7 +68,38 @@ sorted_value, sort_label = [scores[i] for i in sorted_indices], [X.columns[i] fo
 # plot
 sel.plotFeatureImportance(sorted_value, sort_label)
 # Parameters:
-# - show (int): the number of entries displayed.
-# - out  (str): save image name.
-# - out  (str): image title.
+# - show   (int): the number of entries displayed.
+# - out    (str): save image name.
+# - title  (str): image title.
 ```
+![mark](http://img.frankgene.top/blog/20231112/tFUeGCyouTmH.png)
+### 4. Visual disease trends
+Use the following method to show the trend of all indicators in different classes:
+```python
+sel.plotTrend()
+# Parameters:
+# - trend  (dict): indicator trends.
+# - out    (str) : save image name.
+# - title  (str) : image title.
+```
+![mark](http://img.frankgene.top/blog/20231112/wVER3PC96QjK.png)
+### 5. Visual trend weblogo
+Use the following method to show the information entropy of the indicator for all classes:
+```python
+sel.plotWeblogo()
+# Parameters:
+# - information  (dict): indicator informations.
+# - showLabel    (bool): show indicator names.
+# - out          (str) : save image name.
+```
+![mark](http://img.frankgene.top/blog/20231112/sq1hdA6h03La.png)
+### 6. Visual trend density
+Use the following method to show the trend and density of target indicator for all classes:
+```python
+sel.plotTrendDensity()
+# Parameters:
+# - indicator (dict): indicator name.
+# - legend    (bool): show legends.
+# - out       (str) : save image name.
+```
+![mark](http://img.frankgene.top/blog/20231112/UkYhlFijdvSU.png)
