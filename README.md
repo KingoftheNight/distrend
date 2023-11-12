@@ -57,3 +57,16 @@ If you just want to get X_new, you can also use the following methods:
 ```python
 X_new = distrend().fit_transform(X, y)
 ```
+### 3. Visual indicators weight
+Distrend provides some simple functions for visualizing the analysis results, starting with visualizing the indicators weight scores obtained above:
+```python
+# before drawing, we want to sort the results
+sorted_indices = scores.argsort()[::-1]
+sorted_value, sort_label = [scores[i] for i in sorted_indices], [X.columns[i] for i in sorted_indices]
+# plot
+sel.plotFeatureImportance(sorted_value, sort_label)
+# Parameters:
+# - show (int): the number of entries displayed.
+# - out  (str): save image name.
+# - out  (str): image title.
+```
