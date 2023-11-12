@@ -36,3 +36,24 @@ If some indicators are not within the distrend range, you can update stdIndicato
 indicators['your_indicator'] = {'Type': 'Self indicators', 'From': 5.0, 'To': 38.0, 'Unit': 'g/L'}
 sel.stdIndicators.update(indicators)
 ```
+### 2. Analyze Trends
+Analyze the trends of different classes in X according to y and calculate the weight of each indicator (given by the information entropy bias) :
+```python
+sel.fit(X, y)
+# Parameters:
+# - X (DataFrame): input dataset.
+# - y (DataFrame): input label of dataset.
+```
+The sel is trained to contain the following attributes:
+```python
+scores = sel.scores  # indicator weight
+matrix = sel.matrix  # trend matrix
+```
+A trend matrix converts X into a trend vector (each cell is a string instead of a number), which can be mapped to a numerical matrix in the following way:
+```python
+X_new = sel.transform(X)
+```
+If you just want to get X_new, you can also use the following methods:
+```python
+X_new = distrend().fit_transform(X, y)
+```
