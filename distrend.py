@@ -1,6 +1,6 @@
-# Dtap: 基于趋势向量的血常规疾病预测模型
+# distrend: 基于趋势向量的疾病分析模块
 # 作者: 梁雨朝
-# 日期: 2023.09.26
+# 日期: 2023.11.12
 
 # 导入包
 import math
@@ -15,86 +15,72 @@ class distrend():
     def __init__(self):
         self.colors = ['#2279B5', '#FE7F0F']
         self.stdIndicators = {
-            'NEUT#': {'Type': 'Blood Routine Test', 'From': 1.8, 'To': 6.3, 'Unit': 'g/L'},
-            'NEUT': {'Type': 'Blood Routine Test', 'From': 1.8, 'To': 6.3, 'Unit': 'g/L'},
-            'NEU': {'Type': 'Blood Routine Test', 'From': 1.8, 'To': 6.3, 'Unit': 'g/L'},
-            'LYMPH#': {'Type': 'Blood Routine Test', 'From': 1.1, 'To': 3.2, 'Unit': 'g/L'},
-            'LYMPH': {'Type': 'Blood Routine Test', 'From': 1.1, 'To': 3.2, 'Unit': 'g/L'},
-            'LYM': {'Type': 'Blood Routine Test', 'From': 1.1, 'To': 3.2, 'Unit': 'g/L'},
-            'EO#': {'Type': 'Blood Routine Test', 'From': 0.02, 'To': 0.52, 'Unit': 'g/L'},
-            'EOS': {'Type': 'Blood Routine Test', 'From': 0.02, 'To': 0.52, 'Unit': 'g/L'},
-            'BASO#': {'Type': 'Blood Routine Test', 'From': 0.0, 'To': 0.06, 'Unit': 'g/L'},
-            'BAS': {'Type': 'Blood Routine Test', 'From': 0.0, 'To': 0.06, 'Unit': 'g/L'},
-            'MONO#': {'Type': 'Blood Routine Test', 'From': 0.1, 'To': 0.6, 'Unit': 'g/L'},
-            'MON': {'Type': 'Blood Routine Test', 'From': 0.1, 'To': 0.6, 'Unit': 'g/L'},
-            'NEUT%': {'Type': 'Blood Routine Test', 'From': 40.0, 'To': 75.0, 'Unit': 'g/L'},
-            'NEU%': {'Type': 'Blood Routine Test', 'From': 40.0, 'To': 75.0, 'Unit': 'g/L'},
-            'LYMPH%': {'Type': 'Blood Routine Test', 'From': 20.0, 'To': 50.0, 'Unit': 'g/L'},
-            'LYM%': {'Type': 'Blood Routine Test', 'From': 20.0, 'To': 50.0, 'Unit': 'g/L'},
-            'EO%': {'Type': 'Blood Routine Test', 'From': 0.4, 'To': 8.0, 'Unit': 'g/L'},
-            'EOS%': {'Type': 'Blood Routine Test', 'From': 0.4, 'To': 8.0, 'Unit': 'g/L'},
-            'BASO%': {'Type': 'Blood Routine Test', 'From': 0.0, 'To': 1.0, 'Unit': 'g/L'},
-            'BAS%': {'Type': 'Blood Routine Test', 'From': 0.0, 'To': 1.0, 'Unit': 'g/L'},
-            'MONO%': {'Type': 'Blood Routine Test', 'From': 3.0, 'To': 10.0, 'Unit': 'g/L'},
-            'MON%': {'Type': 'Blood Routine Test', 'From': 3.0, 'To': 10.0, 'Unit': 'g/L'},
-            'RDW-SD': {'Type': 'Blood Routine Test', 'From': 37.0, 'To': 50.0, 'Unit': 'g/L'},
-            'RDW(SD)': {'Type': 'Blood Routine Test', 'From': 37.0, 'To': 50.0, 'Unit': 'g/L'},
-            'RDW-CV': {'Type': 'Blood Routine Test', 'From': 11.5, 'To': 14.5, 'Unit': 'g/L'},
-            'RDW(CV)': {'Type': 'Blood Routine Test', 'From': 11.5, 'To': 14.5, 'Unit': 'g/L'},
-            'P-LCR': {'Type': 'Blood Routine Test', 'From': 13.0, 'To': 43.0, 'Unit': 'g/L'},
-            'HCT': {'Type': 'Blood Routine Test', 'From': 0.35, 'To': 0.45, 'Unit': 'g/L'},
-            'MCV': {'Type': 'Blood Routine Test', 'From': 82.0, 'To': 100.0, 'Unit': 'g/L'},
+            'NEUT#': {'Type': 'Blood Routine Test', 'From': 1.8, 'To': 6.3, 'Unit': '/L'},
+            'LYMPH#': {'Type': 'Blood Routine Test', 'From': 1.1, 'To': 3.2, 'Unit': '/L'},
+            'EO#': {'Type': 'Blood Routine Test', 'From': 0.02, 'To': 0.52, 'Unit': '/L'},
+            'BASO#': {'Type': 'Blood Routine Test', 'From': 0.0, 'To': 0.06, 'Unit': '/L'},
+            'MONO#': {'Type': 'Blood Routine Test', 'From': 0.1, 'To': 0.6, 'Unit': '/L'},
+            'NEUT%': {'Type': 'Blood Routine Test', 'From': 40.0, 'To': 75.0, 'Unit': '%'},
+            'LYMPH%': {'Type': 'Blood Routine Test', 'From': 20.0, 'To': 50.0, 'Unit': '%'},
+            'EO%': {'Type': 'Blood Routine Test', 'From': 0.4, 'To': 8.0, 'Unit': '%'},
+            'BASO%': {'Type': 'Blood Routine Test', 'From': 0.0, 'To': 1.0, 'Unit': '%'},
+            'MONO%': {'Type': 'Blood Routine Test', 'From': 3.0, 'To': 10.0, 'Unit': '%'},
+            'RDW-SD': {'Type': 'Blood Routine Test', 'From': 37.0, 'To': 50.0, 'Unit': 'fl'},
+            'RDW-CV': {'Type': 'Blood Routine Test', 'From': 11.5, 'To': 14.5, 'Unit': '%'},
+            'P-LCR': {'Type': 'Blood Routine Test', 'From': 13.0, 'To': 43.0, 'Unit': '%'},
+            'HCT': {'Type': 'Blood Routine Test', 'From': 0.35, 'To': 0.45, 'Unit': 'L/L'},
+            'MCV': {'Type': 'Blood Routine Test', 'From': 82.0, 'To': 100.0, 'Unit': 'fl'},
             'MCHC': {'Type': 'Blood Routine Test', 'From': 316.0, 'To': 354.0, 'Unit': 'g/L'},
-            'MCH': {'Type': 'Blood Routine Test', 'From': 316.0, 'To': 354.0, 'Unit': 'g/L'},
-            'PLT': {'Type': 'Blood Routine Test', 'From': 125.0, 'To': 350.0, 'Unit': 'g/L'},
-            'PDW': {'Type': 'Blood Routine Test', 'From': 15.0, 'To': 17.0, 'Unit': 'g/L'},
+            'MCH': {'Type': 'Blood Routine Test', 'From': 316.0, 'To': 354.0, 'Unit': 'pg'},
+            'PLT': {'Type': 'Blood Routine Test', 'From': 125.0, 'To': 350.0, 'Unit': '/L'},
+            'PDW': {'Type': 'Blood Routine Test', 'From': 15.0, 'To': 17.0, 'Unit': '%'},
             'HGB': {'Type': 'Blood Routine Test', 'From': 110.0, 'To': 150.0, 'Unit': 'g/L'},
-            'MPV': {'Type': 'Blood Routine Test', 'From': 5.0, 'To': 15.0, 'Unit': 'g/L'},
-            'PCT': {'Type': 'Blood Routine Test', 'From': 0.06, 'To': 0.4, 'Unit': 'g/L'},
-            'RBC': {'Type': 'Blood Routine Test', 'From': 3.8, 'To': 5.1, 'Unit': 'g/L'},
-            'WBC': {'Type': 'Blood Routine Test', 'From': 3.5, 'To': 9.5, 'Unit': 'g/L'},
-            'PT': {'Type': 'Blood Routine Test', 'From': 8.2, 'To': 11.5, 'Unit': 'g/L'},
-            'PTA': {'Type': 'Blood Routine Test', 'From': 70.0, 'To': 130.0, 'Unit': 'g/L'},
-            'APTT': {'Type': 'Blood Routine Test', 'From': 25.0, 'To': 35.0, 'Unit': 'g/L'},
+            'MPV': {'Type': 'Blood Routine Test', 'From': 5.0, 'To': 15.0, 'Unit': 'fl'},
+            'PCT': {'Type': 'Blood Routine Test', 'From': 0.06, 'To': 0.4, 'Unit': '%'},
+            'RBC': {'Type': 'Blood Routine Test', 'From': 3.8, 'To': 5.1, 'Unit': '/L'},
+            'WBC': {'Type': 'Blood Routine Test', 'From': 3.5, 'To': 9.5, 'Unit': '/L'},
+            'PT': {'Type': 'Blood Routine Test', 'From': 8.2, 'To': 11.5, 'Unit': 's'},
+            'PTA': {'Type': 'Blood Routine Test', 'From': 70.0, 'To': 130.0, 'Unit': '%'},
+            'APTT': {'Type': 'Blood Routine Test', 'From': 25.0, 'To': 35.0, 'Unit': 's'},
             'FIB': {'Type': 'Blood Routine Test', 'From': 2.0, 'To': 4.0, 'Unit': 'g/L'},
-            'TT': {'Type': 'Blood Routine Test', 'From': 16.0, 'To': 18.0, 'Unit': 'g/L'},
-            'INR': {'Type': 'Blood Routine Test', 'From': 0.8, 'To': 1.2, 'Unit': 'g/L'},
+            'TT': {'Type': 'Blood Routine Test', 'From': 16.0, 'To': 18.0, 'Unit': 's'},
+            'INR': {'Type': 'Blood Routine Test', 'From': 0.8, 'To': 1.2, 'Unit': '-'},
             'TP': {'Type': 'Blood Biochemistry Test', 'From': 60.0, 'To': 80.0, 'Unit': 'g/L'},
             'ALB': {'Type': 'Blood Biochemistry Test', 'From': 35.0, 'To': 55.0, 'Unit': 'g/L'},
-            'TBIL': {'Type': 'Blood Biochemistry Test', 'From': 3.42, 'To': 20.5, 'Unit': 'g/L'},
-            'DBIL': {'Type': 'Blood Biochemistry Test', 'From': 0.0, 'To': 7.0, 'Unit': 'g/L'},
-            'ADA': {'Type': 'Blood Biochemistry Test', 'From': 0.0, 'To': 25.0, 'Unit': 'g/L'},
-            'ALP': {'Type': 'Blood Biochemistry Test', 'From': 45.0, 'To': 132.0, 'Unit': 'g/L'},
-            'LDH': {'Type': 'Blood Biochemistry Test', 'From': 109.0, 'To': 245.0, 'Unit': 'g/L'},
-            'CHE': {'Type': 'Blood Biochemistry Test', 'From': 3.7, 'To': 7.0, 'Unit': 'g/L'},
-            'K': {'Type': 'Blood Biochemistry Test', 'From': 3.5, 'To': 5.3, 'Unit': 'g/L'},
-            'NA': {'Type': 'Blood Biochemistry Test', 'From': 137.0, 'To': 147.0, 'Unit': 'g/L'},
-            'CL': {'Type': 'Blood Biochemistry Test', 'From': 99.0, 'To': 110.0, 'Unit': 'g/L'},
-            'Ca': {'Type': 'Blood Biochemistry Test', 'From': 2.08, 'To': 2.6, 'Unit': 'g/L'},
-            'CO2CP': {'Type': 'Blood Biochemistry Test', 'From': 22.0, 'To': 29.0, 'Unit': 'g/L'},
-            'UREA': {'Type': 'Blood Biochemistry Test', 'From': 2.14, 'To': 7.85, 'Unit': 'g/L'},
-            'Cr': {'Type': 'Blood Biochemistry Test', 'From': 41.0, 'To': 80.0, 'Unit': 'g/L'},
-            'UA': {'Type': 'Blood Biochemistry Test', 'From': 155.0, 'To': 357.0, 'Unit': 'g/L'},
-            'GLU': {'Type': 'Blood Biochemistry Test', 'From': 3.9, 'To': 6.19, 'Unit': 'g/L'},
-            'TG': {'Type': 'Blood Biochemistry Test', 'From': 0.4, 'To': 1.7, 'Unit': 'g/L'},
-            'TC': {'Type': 'Blood Biochemistry Test', 'From': 3.1, 'To': 5.7, 'Unit': 'g/L'},
-            'HDL': {'Type': 'Blood Biochemistry Test', 'From': 1.2, 'To': 1.65, 'Unit': 'g/L'},
-            'LDL': {'Type': 'Blood Biochemistry Test', 'From': 2.59, 'To': 3.37, 'Unit': 'g/L'},
-            'AMY': {'Type': 'Blood Biochemistry Test', 'From': 8.0, 'To': 53.0, 'Unit': 'g/L'},
-            'LPS': {'Type': 'Blood Biochemistry Test', 'From': 1.0, 'To': 60.0, 'Unit': 'g/L'},
-            'CK-MB': {'Type': 'Blood Biochemistry Test', 'From': 0.0, 'To': 25.0, 'Unit': 'g/L'},
+            'TBIL': {'Type': 'Blood Biochemistry Test', 'From': 3.42, 'To': 20.5, 'Unit': 'umol/L'},
+            'DBIL': {'Type': 'Blood Biochemistry Test', 'From': 0.0, 'To': 7.0, 'Unit': 'umol/L'},
+            'ADA': {'Type': 'Blood Biochemistry Test', 'From': 0.0, 'To': 25.0, 'Unit': 'U/L'},
+            'ALP': {'Type': 'Blood Biochemistry Test', 'From': 45.0, 'To': 132.0, 'Unit': 'U/L'},
+            'LDH': {'Type': 'Blood Biochemistry Test', 'From': 109.0, 'To': 245.0, 'Unit': 'U/L'},
+            'CHE': {'Type': 'Blood Biochemistry Test', 'From': 3.7, 'To': 7.0, 'Unit': 'U/L'},
+            'K': {'Type': 'Blood Biochemistry Test', 'From': 3.5, 'To': 5.3, 'Unit': 'mmol/L'},
+            'NA': {'Type': 'Blood Biochemistry Test', 'From': 137.0, 'To': 147.0, 'Unit': 'mmol/L'},
+            'CL': {'Type': 'Blood Biochemistry Test', 'From': 99.0, 'To': 110.0, 'Unit': 'mmol/L'},
+            'Ca': {'Type': 'Blood Biochemistry Test', 'From': 2.08, 'To': 2.6, 'Unit': 'mmol/L'},
+            'CO2CP': {'Type': 'Blood Biochemistry Test', 'From': 22.0, 'To': 29.0, 'Unit': 'mmol/L'},
+            'UREA': {'Type': 'Blood Biochemistry Test', 'From': 2.14, 'To': 7.85, 'Unit': 'umol/L'},
+            'Cr': {'Type': 'Blood Biochemistry Test', 'From': 41.0, 'To': 80.0, 'Unit': 'mmol/L'},
+            'UA': {'Type': 'Blood Biochemistry Test', 'From': 155.0, 'To': 357.0, 'Unit': 'umol/L'},
+            'GLU': {'Type': 'Blood Biochemistry Test', 'From': 3.9, 'To': 6.19, 'Unit': 'mmol/L'},
+            'TG': {'Type': 'Blood Biochemistry Test', 'From': 0.4, 'To': 1.7, 'Unit': 'mmol/L'},
+            'TC': {'Type': 'Blood Biochemistry Test', 'From': 3.1, 'To': 5.7, 'Unit': 'mmol/L'},
+            'HDL': {'Type': 'Blood Biochemistry Test', 'From': 1.2, 'To': 1.65, 'Unit': 'mmol/L'},
+            'LDL': {'Type': 'Blood Biochemistry Test', 'From': 2.59, 'To': 3.37, 'Unit': 'mmol/L'},
+            'AMY': {'Type': 'Blood Biochemistry Test', 'From': 8.0, 'To': 53.0, 'Unit': 'U/L'},
+            'LPS': {'Type': 'Blood Biochemistry Test', 'From': 1.0, 'To': 60.0, 'Unit': 'umol/L'},
+            'CK-MB': {'Type': 'Blood Biochemistry Test', 'From': 0.0, 'To': 25.0, 'Unit': 'U/L'},
             'GLB': {'Type': 'Blood Biochemistry Test', 'From': 20.0, 'To': 40.0, 'Unit': 'g/L'},
-            'A/G': {'Type': 'Blood Biochemistry Test', 'From': 1.2, 'To': 2.4, 'Unit': 'g/L'},
-            'IBIL': {'Type': 'Blood Biochemistry Test', 'From': 1.7, 'To': 10.2, 'Unit': 'g/L'},
+            'A/G': {'Type': 'Blood Biochemistry Test', 'From': 1.2, 'To': 2.4, 'Unit': '-'},
+            'IBIL': {'Type': 'Blood Biochemistry Test', 'From': 1.7, 'To': 10.2, 'Unit': '-'},
             'AG': {'Type': 'Blood Biochemistry Test', 'From': 8.0, 'To': 16.0, 'Unit': 'g/L'},
-            'U-PRO': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 0.0, 'Unit': 'g/L'},
+            'U-PRO': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 0.0, 'Unit': '-'},
             'U-URO': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 17.0, 'Unit': 'g/L'},
-            'U-BIL': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 0.0, 'Unit': 'g/L'},
-            'U-pH': {'Type': 'Urine Routine Test', 'From': 4.6, 'To': 8.0, 'Unit': 'g/L'},
-            'U-KET': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 0.0, 'Unit': 'g/L'},
+            'U-BIL': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 0.0, 'Unit': '-'},
+            'U-pH': {'Type': 'Urine Routine Test', 'From': 4.6, 'To': 8.0, 'Unit': 'umol/L'},
+            'U-KET': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 0.0, 'Unit': '-'},
             'U-SG': {'Type': 'Urine Routine Test', 'From': 1.003, 'To': 1.03, 'Unit': 'g/L'},
-            'U-GLU': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 0.0, 'Unit': 'g/L'},
-            'U-COL': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 0.0, 'Unit': 'g/L'},
+            'U-GLU': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 0.0, 'Unit': '-'},
+            'U-COL': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 0.0, 'Unit': '-'},
             'U-SRC': {'Type': 'Urine Routine Test', 'From': 0.0, 'To': 3.4, 'Unit': 'g/L'},
             'U-cond': {'Type': 'Urine Routine Test', 'From': 5.0, 'To': 38.0, 'Unit': 'g/L'}
         }
@@ -114,6 +100,14 @@ class distrend():
     
     def __repr__(self):
         return "Processing finished!"
+
+    
+    def testData(self):
+        df = pd.DataFrame()
+        for key in list(self.stdIndicators.keys())[30:40]:
+            df[key] = np.random.rand(200)*self.stdIndicators[key]['To']*1.5+self.stdIndicators[key]['From']*0.5
+        df['label'] = np.random.choice([0, 1], size=200)
+        return df.iloc[:,:-1], df.iloc[:,-1]
 
 
     def checkStdIndicators(self, X):
@@ -455,7 +449,7 @@ class distrend():
         cols = 5  # 计算列数
         rows = (len(values) + cols - 1) // cols  # 计算行数
         # 绘制组合图
-        fig, axs = plt.subplots(rows, cols, figsize=(cols*3, rows*1))  # 设置图形的大小
+        fig, axs = plt.subplots(rows, cols, figsize=(cols*3, rows*1.2))  # 设置图形的大小
         fig.suptitle(title, fontsize=16)  # 设置总标题
         i = -1
         for feature in values:
