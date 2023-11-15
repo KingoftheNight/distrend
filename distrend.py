@@ -7,6 +7,10 @@ import math
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+from sklearn.metrics import roc_curve
+from matplotlib.colors import LinearSegmentedColormap
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib.cm import ScalarMappable
 pd.options.mode.chained_assignment = None
 import matplotlib.pyplot as plt
 
@@ -226,7 +230,29 @@ class distrend():
         # 计算信息熵bias
         self.bias = self.informationBias(information=self.information)
         self.scores = np.array([self.bias[item] for item in X.columns])
+        # 计算疾病分数
+        self.dMatrix = X.copy(deep=True)
+        self.dMatrix = self.dMatrix.apply(self.apply_sigmoid)
+        self.dMatrix['dValue'] = self.dMatrix.sum(axis=1)
+        self.dValThred = self.dValueThred(self.dMatrix, y)
         return self
+    
+    
+    def dValueThred(self, dMatrix, y):
+        thred = {}
+        for key in dMatrix.columns:
+            fpr, tpr, thresholds = roc_curve(y, dMatrix[key])
+            threshold_index = np.argmax(tpr - fpr)
+            thred[key] = thresholds[threshold_index]
+        return thred
+    
+    def apply_sigmoid(self, column):
+        column_name = column.name
+        return self.sigmoid(column) * self.bias[column_name]
+    
+    
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
     
     
     def transform(self, X=None, maps=None):
@@ -464,6 +490,8 @@ class distrend():
                 for label_class in values[feature]:
                     group.append(values[feature][label_class][j])
                     label.append(f'Class {label_class}')
+                if word == 'P':
+                    group = [max(group) for n in group]
                 ax.barh(label, group, label=word, left=left, color=self.words_color[word])
                 left = group
             ax.set_title(feature)
@@ -520,6 +548,8 @@ class distrend():
                             ax.text((x+max(left))/2 - max_x*0.018, k, word, ha='left', va='center', color='#ffffff')
                         else:
                             ax.text((x+left[k])/2 - max_x*0.018, k, word, ha='left', va='center', color='#ffffff')
+            if word == 'P':
+                group = [max(group) for n in group]
             ax.barh(label, group, label=word, left=left, color=self.words_color[word])
             left = group
         ax.set_xlim(0, max(left))
@@ -539,9 +569,6 @@ class distrend():
         ax.set_ylabel('Density')
         if legend:
             ax.legend()
-        
-        
-        
         plt.tight_layout()  # 调整子图的布局，避免重叠
         if out:
             plt.savefig(out, dpi=300, bbox_inches='tight')
@@ -565,3 +592,47 @@ class distrend():
             plt.savefig(out, dpi=300, bbox_inches='tight')
         plt.show()
         plt.close()
+
+
+    def plotForce(self, X=None, out=None):
+        if not X:
+            X = self.ori_X.iloc[0]
+        # 获取force
+        force = []
+        for key in X.keys():
+            force.append((self.bias[key] / (1 + np.exp(-X[key]))) - self.dValThred[key])
+        # 归一化
+        force = 2 * (np.array(force) - np.min(force)) / (np.max(force) - np.min(force)) - 1
+        # 绘制force
+        plt.figure(figsize=(len(force)*0.45, 0.45))
+        cmap = LinearSegmentedColormap.from_list('custom_cmap', ['#568AAD', '#FFFFFF', '#F2AA6C'], N=256)
+        colors = cmap(force)
+        plt.scatter([i for i in range(len(force))], [0 for i in range(len(force))], s=300, c=colors, cmap=cmap)
+        plt.xticks([i for i in range(len(force))], list(X.keys()), rotation=90)
+        plt.xlim(-0.55, len(force)-0.45)
+        plt.ylim(-0.5, 0.55)
+        plt.tick_params(axis='both', which='both', bottom=False, top=False, left=False, right=False, labelleft=False)
+        plt.gca().spines['top'].set_visible(False)
+        plt.gca().spines['bottom'].set_visible(False)
+        plt.gca().spines['left'].set_visible(False)
+        plt.gca().spines['right'].set_visible(False)
+        if out:
+            plt.savefig(out, dpi=300, bbox_inches='tight')
+        plt.show()
+        plt.close()
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
