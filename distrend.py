@@ -7,12 +7,11 @@ import math
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from sklearn.metrics import roc_curve
-from matplotlib.colors import LinearSegmentedColormap
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-from matplotlib.cm import ScalarMappable
 pd.options.mode.chained_assignment = None
 import matplotlib.pyplot as plt
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.sans-serif'] = ['Times New Roman']
+
 
 # 模型
 class distrend():
@@ -230,29 +229,7 @@ class distrend():
         # 计算信息熵bias
         self.bias = self.informationBias(information=self.information)
         self.scores = np.array([self.bias[item] for item in X.columns])
-        # 计算疾病分数
-        self.dMatrix = X.copy(deep=True)
-        self.dMatrix = self.dMatrix.apply(self.apply_sigmoid)
-        self.dMatrix['dValue'] = self.dMatrix.sum(axis=1)
-        self.dValThred = self.dValueThred(self.dMatrix, y)
         return self
-    
-    
-    def dValueThred(self, dMatrix, y):
-        thred = {}
-        for key in dMatrix.columns:
-            fpr, tpr, thresholds = roc_curve(y, dMatrix[key])
-            threshold_index = np.argmax(tpr - fpr)
-            thred[key] = thresholds[threshold_index]
-        return thred
-    
-    def apply_sigmoid(self, column):
-        column_name = column.name
-        return self.sigmoid(column) * self.bias[column_name]
-    
-    
-    def sigmoid(self, x):
-        return 1 / (1 + np.exp(-x))
     
     
     def transform(self, X=None, maps=None):
@@ -478,7 +455,7 @@ class distrend():
         fig, axs = plt.subplots(rows, cols, figsize=(cols*3, rows*1.2))  # 设置图形的大小
         fig.suptitle(title, fontsize=16)  # 设置总标题
         i = -1
-        for feature in values:
+        for feature in tqdm(values):
             i += 1
             row_idx = i // cols
             col_idx = i % cols
@@ -576,63 +553,24 @@ class distrend():
         plt.close()
     
     
-    def plotFeatureImportance(self, value, label, show=None, out=None, title='Feature Importance Score'):
+    def plotFeatureImportance(self, value, label, show=None, out=None, title='Feature Contribution'):
         if show:
-            plt.figure(figsize=(4, show*0.4))
+            plt.figure(figsize=(1, show*0.4))
             plt.ylim(-0.5, show+0.6)
-            plt.barh(['Other Features'] + label[::-1][-show:], [sum(value[::-1][:-show])] + value[::-1][-show:], color='#5B9BD5')
+            plt.barh(['Others'] + label[::-1][-show:], [sum(value[::-1][:-show])] + value[::-1][-show:], color='#5B9BD5')
         else:
-            plt.figure(figsize=(4, len(label)*0.4))
+            plt.figure(figsize=(1, len(label)*0.4))
             plt.ylim(-0.5, len(label)-0.2)
             plt.barh(label[::-1], value[::-1], color='#5B9BD5')
         plt.title(title)
-        plt.ylabel('Features')
-        plt.xlabel('Importance Score')
+        plt.ylabel('')
+        plt.xlabel('')
         if out:
             plt.savefig(out, dpi=300, bbox_inches='tight')
-        plt.show()
-        plt.close()
-
-
-    def plotForce(self, X=None, out=None):
-        if not X:
-            X = self.ori_X.iloc[0]
-        # 获取force
-        force = []
-        for key in X.keys():
-            force.append((self.bias[key] / (1 + np.exp(-X[key]))) - self.dValThred[key])
-        # 归一化
-        force = 2 * (np.array(force) - np.min(force)) / (np.max(force) - np.min(force)) - 1
-        # 绘制force
-        plt.figure(figsize=(len(force)*0.45, 0.45))
-        cmap = LinearSegmentedColormap.from_list('custom_cmap', ['#568AAD', '#FFFFFF', '#F2AA6C'], N=256)
-        colors = cmap(force)
-        plt.scatter([i for i in range(len(force))], [0 for i in range(len(force))], s=300, c=colors, cmap=cmap)
-        plt.xticks([i for i in range(len(force))], list(X.keys()), rotation=90)
-        plt.xlim(-0.55, len(force)-0.45)
-        plt.ylim(-0.5, 0.55)
-        plt.tick_params(axis='both', which='both', bottom=False, top=False, left=False, right=False, labelleft=False)
+        plt.tick_params(axis='x', which='both', bottom=False, top=False, left=False, right=False, labelleft=False)
         plt.gca().spines['top'].set_visible(False)
         plt.gca().spines['bottom'].set_visible(False)
         plt.gca().spines['left'].set_visible(False)
         plt.gca().spines['right'].set_visible(False)
-        if out:
-            plt.savefig(out, dpi=300, bbox_inches='tight')
         plt.show()
         plt.close()
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
